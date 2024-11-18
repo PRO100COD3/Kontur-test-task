@@ -6,6 +6,16 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3C444FA02CEC04A700950F7E /* CombineMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 3C444F9F2CEC04A700950F7E /* CombineMoya */; };
+		3C444FA22CEC04A700950F7E /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 3C444FA12CEC04A700950F7E /* Moya */; };
+		3C444FA42CEC04A700950F7E /* ReactiveMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 3C444FA32CEC04A700950F7E /* ReactiveMoya */; };
+		3C444FA62CEC04A700950F7E /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 3C444FA52CEC04A700950F7E /* RxMoya */; };
+		3C444FA92CEC05DB00950F7E /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 3C444FA82CEC05DB00950F7E /* Kingfisher */; };
+		3C444FC62CEC06F300950F7E /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3C444FC52CEC06F300950F7E /* SnapKit */; };
+		3C444FCB2CEC06FD00950F7E /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 3C444FCA2CEC06FD00950F7E /* ProgressHUD */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		3C444EC02CE8ADDD00950F7E /* Kontur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kontur.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +46,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C444FA22CEC04A700950F7E /* Moya in Frameworks */,
+				3C444FCB2CEC06FD00950F7E /* ProgressHUD in Frameworks */,
+				3C444FA02CEC04A700950F7E /* CombineMoya in Frameworks */,
+				3C444FA62CEC04A700950F7E /* RxMoya in Frameworks */,
+				3C444FC62CEC06F300950F7E /* SnapKit in Frameworks */,
+				3C444FA42CEC04A700950F7E /* ReactiveMoya in Frameworks */,
+				3C444FA92CEC05DB00950F7E /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +95,13 @@
 			);
 			name = Kontur;
 			packageProductDependencies = (
+				3C444F9F2CEC04A700950F7E /* CombineMoya */,
+				3C444FA12CEC04A700950F7E /* Moya */,
+				3C444FA32CEC04A700950F7E /* ReactiveMoya */,
+				3C444FA52CEC04A700950F7E /* RxMoya */,
+				3C444FA82CEC05DB00950F7E /* Kingfisher */,
+				3C444FC52CEC06F300950F7E /* SnapKit */,
+				3C444FCA2CEC06FD00950F7E /* ProgressHUD */,
 			);
 			productName = Kontur;
 			productReference = 3C444EC02CE8ADDD00950F7E /* Kontur.app */;
@@ -107,6 +131,12 @@
 			);
 			mainGroup = 3C444EB72CE8ADDD00950F7E;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3C444F9E2CEC04A700950F7E /* XCRemoteSwiftPackageReference "Moya" */,
+				3C444FA72CEC05DB00950F7E /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				3C444FC42CEC06F300950F7E /* XCRemoteSwiftPackageReference "SnapKit" */,
+				3C444FC92CEC06FD00950F7E /* XCRemoteSwiftPackageReference "ProgressHUD" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3C444EC12CE8ADDD00950F7E /* Products */;
 			projectDirPath = "";
@@ -333,6 +363,79 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3C444F9E2CEC04A700950F7E /* XCRemoteSwiftPackageReference "Moya" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Moya/Moya";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.3;
+			};
+		};
+		3C444FA72CEC05DB00950F7E /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.1.0;
+			};
+		};
+		3C444FC42CEC06F300950F7E /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+		3C444FC92CEC06FD00950F7E /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/relatedcode/ProgressHUD";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 14.1.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3C444F9F2CEC04A700950F7E /* CombineMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3C444F9E2CEC04A700950F7E /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = CombineMoya;
+		};
+		3C444FA12CEC04A700950F7E /* Moya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3C444F9E2CEC04A700950F7E /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = Moya;
+		};
+		3C444FA32CEC04A700950F7E /* ReactiveMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3C444F9E2CEC04A700950F7E /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = ReactiveMoya;
+		};
+		3C444FA52CEC04A700950F7E /* RxMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3C444F9E2CEC04A700950F7E /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = RxMoya;
+		};
+		3C444FA82CEC05DB00950F7E /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3C444FA72CEC05DB00950F7E /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		3C444FC52CEC06F300950F7E /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3C444FC42CEC06F300950F7E /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		3C444FCA2CEC06FD00950F7E /* ProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3C444FC92CEC06FD00950F7E /* XCRemoteSwiftPackageReference "ProgressHUD" */;
+			productName = ProgressHUD;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3C444EB82CE8ADDD00950F7E /* Project object */;
 }

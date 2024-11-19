@@ -11,7 +11,6 @@ import UIKit
 protocol FirstScreenPresenter: AnyObject {
     func viewDidLoad(_ view: FirstScreenViewController)
     func setView(_ view: FirstScreenViewController)
-    func didTapWebViewButton()
     func formateDate(input: String) -> String
     func formateCountry(input: String) -> String
     func formatToMillions(number: Int) -> String
@@ -25,10 +24,9 @@ enum FirstScreenPresenterState {
 }
 
 final class FirstScreenPresenterImpl {
-    let provider = MoyaProvider<SpaceXAPI>()
+    private let provider = MoyaProvider<SpaceXAPI>()
     var rockets: [Rocket] = []
     weak var view: FirstScreenView?
-    private var group = DispatchGroup()
     private var state = FirstScreenPresenterState.initial {
         didSet {
             stateDidChanged()
@@ -40,37 +38,29 @@ final class FirstScreenPresenterImpl {
             case .initial:
                 assertionFailure("can't move to initial state")
             case .loading:
-                view?.showLoading()
-                group.enter()
                 fetchRockets()
-                group.leave()
-                group.notify(queue: DispatchQueue.main) {
-                    self.state = .data(self.rockets)
-                }
             case .data(let rockets):
-                view?.hideLoading()
                 self.rockets = rockets
                 view?.reloadData()
             case .failed(_):
-                view?.hideLoading()
                 print("Ошибка загрузки")
         }
     }
     
-    func fetchRockets() {
-        group.enter()
+    private func fetchRockets() {
         provider.request(.rockets) { [weak self] result in
             switch result {
             case .success(let response):
                 do {
                     self?.rockets = try JSONDecoder().decode([Rocket].self, from: response.data)
+                    self?.state = .data(self?.rockets ?? [])
+
                 } catch {
                     print("Failed to decode: \(error)")
                 }
             case .failure(let error):
                 print("Request failed: \(error)")
             }
-            self?.group.leave()
         }
     }
 }
@@ -113,21 +103,14 @@ extension FirstScreenPresenterImpl: FirstScreenPresenter {
         inputFormatter.dateFormat = "yyyy-MM-dd"
         let date = inputFormatter.date(from: input) ?? Date()
         let outputFormatter = DateFormatter()
-        outputFormatter.locale = Locale(identifier: "ru_RU") // Русская локаль для месяца
-        outputFormatter.dateFormat = "d MMMM yyyy" // Формат для вывода
+        outputFormatter.locale = Locale(identifier: "ru_RU")
+        outputFormatter.dateFormat = "d MMMM yyyy" 
         let formattedDate = outputFormatter.string(from: date)
         return formattedDate
     }
         
     func setView(_ view: FirstScreenViewController) {
         self.view = view
-    }
-    
-    func didTapWebViewButton() {
-//        let webScreen = WebViewScreenViewController()
-//        let navController = webScreen.wrapWithNavigationController()
-//        navController.modalPresentationStyle = .overCurrentContext
-//        view?.present(on: navController)
     }
     
     func viewDidLoad(_ view: FirstScreenViewController) {

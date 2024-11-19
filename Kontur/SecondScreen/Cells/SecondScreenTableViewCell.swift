@@ -69,7 +69,7 @@ final class SecondScreenTableViewCell: UITableViewCell {
             make.leading.equalToSuperview().inset(20)
         }
     }
-        
+    
     func changeCell(with cellModel: SecondScreenCellModel){
         nameLable.text = cellModel.name
         dateLabel.text = cellModel.date

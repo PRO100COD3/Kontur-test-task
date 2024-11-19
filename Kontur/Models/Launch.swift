@@ -35,14 +35,14 @@ struct Launch: Codable {
     let tbd: Bool
     let launch_library_id: String?
     let id: String
-
+    
     struct Fairings: Codable {
         let reused: Bool?
         let recovery_attempt: Bool?
         let recovered: Bool?
         let ships: [String]
     }
-
+    
     struct Links: Codable {
         let patch: Patch
         let reddit: Reddit
@@ -52,31 +52,31 @@ struct Launch: Codable {
         let youtubeID: String?
         let article: String?
         let wikipedia: String?
-
+        
         struct Patch: Codable {
             let small: String?
             let large: String?
         }
-
+        
         struct Reddit: Codable {
             let campaign: String?
             let launch: String?
             let media: String?
             let recovery: String?
         }
-
+        
         struct Flickr: Codable {
             let small: [String]
             let original: [String]
         }
     }
-
+    
     struct Failure: Codable {
         let time: Int
         let altitude: Int?
         let reason: String
     }
-
+    
     struct Core: Codable {
         let core: String?
         let flight: Int?

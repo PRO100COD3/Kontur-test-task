@@ -24,10 +24,9 @@ enum FirstScreenPresenterState {
 }
 
 final class FirstScreenPresenterImpl {
-    let provider = MoyaProvider<SpaceXAPI>()
+    private let provider = MoyaProvider<SpaceXAPI>()
     var rockets: [Rocket] = []
     weak var view: FirstScreenView?
-    private var group = DispatchGroup()
     private var state = FirstScreenPresenterState.initial {
         didSet {
             stateDidChanged()
@@ -39,12 +38,7 @@ final class FirstScreenPresenterImpl {
             case .initial:
                 assertionFailure("can't move to initial state")
             case .loading:
-                group.enter()
                 fetchRockets()
-                group.leave()
-                group.notify(queue: DispatchQueue.main) {
-                    self.state = .data(self.rockets)
-                }
             case .data(let rockets):
                 self.rockets = rockets
                 view?.reloadData()
@@ -53,20 +47,20 @@ final class FirstScreenPresenterImpl {
         }
     }
     
-    func fetchRockets() {
-        group.enter()
+    private func fetchRockets() {
         provider.request(.rockets) { [weak self] result in
             switch result {
             case .success(let response):
                 do {
                     self?.rockets = try JSONDecoder().decode([Rocket].self, from: response.data)
+                    self?.state = .data(self?.rockets ?? [])
+
                 } catch {
                     print("Failed to decode: \(error)")
                 }
             case .failure(let error):
                 print("Request failed: \(error)")
             }
-            self?.group.leave()
         }
     }
 }

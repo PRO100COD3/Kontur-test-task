@@ -95,7 +95,7 @@ final class FirstScreenViewController: UIViewController {
             maker.leading.trailing.top.equalToSuperview()
         }
     }
-        
+    
     private func setupContentView() {
         let pageCount = presenter.rockets.count
         var previousPage: UIView? = nil
@@ -381,14 +381,14 @@ final class FirstScreenViewController: UIViewController {
         button.tintColor = .white
         button.addTarget(self, action: #selector (bottomButtonTapped), for: .touchUpInside)
         button.titleLabel?.font = .systemFont(ofSize: 25)
-
+        
         
         contentView.addSubview(button)
         button.snp.makeConstraints { make in
             make.top.equalTo(secondStageTimeLabelCount.snp.bottom).offset(20)
             make.centerX.equalToSuperview()
         }
-
+        
         let lastElement = button
         contentView.snp.makeConstraints { make in
             make.bottom.equalTo(lastElement.snp.bottom).offset(30)
@@ -408,7 +408,7 @@ final class FirstScreenViewController: UIViewController {
         updateDataForPage(page)
     }
     
-    @objc func bottomButtonTapped() {
+    @objc private func bottomButtonTapped() {
         let secondScreenPresenter = SecondScreenPresenterImpl(id: presenter.rockets[pageControl.currentPage].id ?? "")
         let secondScreen = SecondScreenViewController(title: presenter.rockets[pageControl.currentPage].name ?? "", presenter: secondScreenPresenter)
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "Назад", style: .plain, target: nil, action: nil)

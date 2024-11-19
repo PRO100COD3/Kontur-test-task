@@ -31,11 +31,10 @@ enum SecondScreenPresenterState {
 }
 
 final class SecondScreenPresenterImpl {
-    let provider = MoyaProvider<SpaceXAPI>()
+    private let provider = MoyaProvider<SpaceXAPI>()
     var launch: [Launch] = []
-    var currentRocker: String
-    weak var view: SecondScreenView?
-//    private var group = DispatchGroup()
+    private var currentRocker: String
+    private weak var view: SecondScreenView?
     private var state = SecondScreenPresenterState.initial {
         didSet {
             stateDidChanged()
@@ -51,24 +50,16 @@ final class SecondScreenPresenterImpl {
             case .initial:
                 assertionFailure("can't move to initial state")
             case .loading:
-//                group.enter()
-                fetchLaunchesByRocketID(currentRocker){ result in
+                fetchLaunchesByRocketID(currentRocker){ [weak self] result in
                     switch result {
                         case .success(let launches):
-                            print("Найдено \(launches.count) запусков для указанной ракеты:")
-                            launches.forEach { print($0.name) }
-                            self.launch = launches
-                            self.state = .data(self.launch)
-//                            self.group.leave()
+                            self?.launch = launches
+                            self?.state = .data(self?.launch ?? [])
                         case .failure(let error):
                             print("Ошибка: \(error.localizedDescription)")
-//                            self.group.leave()
                     }
                 }
                 
-//                                group.notify(queue: DispatchQueue.main) {
-//                                    self.state = .data(self.launch)
-//                                }
             case .data(let launch):
                 self.launch = launch
                 let cellModels = launch.map { launch in
@@ -78,7 +69,6 @@ final class SecondScreenPresenterImpl {
                     )
                 }
                 view?.displayCells(cellModels)
-//                view?.reloadData()
             case .failed(_):
                 print("Ошибка загрузки")
         }
@@ -99,23 +89,22 @@ final class SecondScreenPresenterImpl {
             return nil
         }
     }
-
     
-    func fetchLaunchesByRocketID(_ rocketID: String, completion: @escaping (Result<[Launch], Error>) -> Void) {
+    
+    private func fetchLaunchesByRocketID(_ rocketID: String, completion: @escaping (Result<[Launch], Error>) -> Void) {
         provider.request(.launchesByRocket(id: rocketID)) { result in
             switch result {
-            case .success(let response):
-                do {
-                    print(String(data: response.data, encoding: .utf8) ?? "Ошибка при преобразовании данных")
-                    let responseJSON = try JSONDecoder().decode(PaginatedResponse<Launch>.self, from: response.data)
-                    completion(.success(responseJSON.docs))
-                } catch {
-                    print("Ошибка декодирования: \(error)")
+                case .success(let response):
+                    do {
+                        let responseJSON = try JSONDecoder().decode(PaginatedResponse<Launch>.self, from: response.data)
+                        completion(.success(responseJSON.docs))
+                    } catch {
+                        print("Ошибка декодирования: \(error)")
+                        completion(.failure(error))
+                    }
+                case .failure(let error):
+                    print("Ошибка сети: \(error)")
                     completion(.failure(error))
-                }
-            case .failure(let error):
-                print("Ошибка сети: \(error)")
-                completion(.failure(error))
             }
         }
     }

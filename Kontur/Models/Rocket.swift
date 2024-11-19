@@ -10,23 +10,23 @@ struct Rocket: Decodable {
         let meters: Double?
         let feet: Double?
     }
-
+    
     struct Diameter: Decodable {
         let meters: Double?
         let feet: Double?
     }
-
+    
     struct Mass: Decodable {
         let kg: Int?
         let lb: Int?
     }
-
+    
     struct FirstStage: Decodable {
         struct Thrust: Decodable {
             let kN: Int?
             let lbf: Int?
         }
-
+        
         let thrust_sea_level: Thrust?
         let thrust_vacuum: Thrust?
         let reusable: Bool?
@@ -34,23 +34,23 @@ struct Rocket: Decodable {
         let fuel_amount_tons: Double?
         let burn_time_sec: Int?
     }
-
+    
     struct SecondStage: Decodable {
         struct Thrust: Decodable {
             let kN: Int?
             let lbf: Int?
         }
-
+        
         struct Payload: Decodable {
             struct CompositeFairing: Decodable {
                 let height: Height?
                 let diameter: Diameter?
             }
-
+            
             let composite_fairing: CompositeFairing?
             let option_1: String?
         }
-
+        
         let thrust: Thrust?
         let payloads: Payload?
         let reusable: Bool?
@@ -58,18 +58,18 @@ struct Rocket: Decodable {
         let fuel_amount_tons: Double?
         let burn_time_sec: Int?
     }
-
+    
     struct Engines: Decodable {
         struct ISP: Decodable {
             let sea_level: Int?
             let vacuum: Int?
         }
-
+        
         struct Thrust: Decodable {
             let kN: Int?
             let lbf: Int?
         }
-
+        
         let isp: ISP?
         let thrust_sea_level: Thrust?
         let thrust_vacuum: Thrust?
@@ -81,19 +81,19 @@ struct Rocket: Decodable {
         let propellant_2: String?
         let thrust_to_weight: Double?
     }
-
+    
     struct LandingLegs: Decodable {
         let number: Int?
         let material: String?
     }
-
+    
     struct PayloadWeight: Decodable {
         let id: String?
         let name: String?
         let kg: Int?
         let lb: Int?
     }
-
+    
     let height: Height?
     let diameter: Diameter?
     let mass: Mass?

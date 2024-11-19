@@ -17,7 +17,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         let firstScreenPresenter = FirstScreenPresenterImpl()
         let rootViewController = FirstScreenViewController(presenter: firstScreenPresenter)
-        window?.rootViewController = rootViewController
+        let navController = UINavigationController(rootViewController: rootViewController)
+        window?.rootViewController = navController
         window?.makeKeyAndVisible()
     }
 

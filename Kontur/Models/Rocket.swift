@@ -5,8 +5,6 @@
 //  Created by Вадим Дзюба on 16.11.2024.
 //
 
-import Foundation
-
 struct Rocket: Decodable {
     struct Height: Decodable {
         let meters: Double?

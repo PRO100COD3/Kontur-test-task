@@ -11,7 +11,6 @@ import UIKit
 protocol FirstScreenPresenter: AnyObject {
     func viewDidLoad(_ view: FirstScreenViewController)
     func setView(_ view: FirstScreenViewController)
-    func didTapWebViewButton()
     func formateDate(input: String) -> String
     func formateCountry(input: String) -> String
     func formatToMillions(number: Int) -> String
@@ -40,7 +39,6 @@ final class FirstScreenPresenterImpl {
             case .initial:
                 assertionFailure("can't move to initial state")
             case .loading:
-                view?.showLoading()
                 group.enter()
                 fetchRockets()
                 group.leave()
@@ -48,11 +46,9 @@ final class FirstScreenPresenterImpl {
                     self.state = .data(self.rockets)
                 }
             case .data(let rockets):
-                view?.hideLoading()
                 self.rockets = rockets
                 view?.reloadData()
             case .failed(_):
-                view?.hideLoading()
                 print("Ошибка загрузки")
         }
     }
@@ -113,21 +109,14 @@ extension FirstScreenPresenterImpl: FirstScreenPresenter {
         inputFormatter.dateFormat = "yyyy-MM-dd"
         let date = inputFormatter.date(from: input) ?? Date()
         let outputFormatter = DateFormatter()
-        outputFormatter.locale = Locale(identifier: "ru_RU") // Русская локаль для месяца
-        outputFormatter.dateFormat = "d MMMM yyyy" // Формат для вывода
+        outputFormatter.locale = Locale(identifier: "ru_RU")
+        outputFormatter.dateFormat = "d MMMM yyyy" 
         let formattedDate = outputFormatter.string(from: date)
         return formattedDate
     }
         
     func setView(_ view: FirstScreenViewController) {
         self.view = view
-    }
-    
-    func didTapWebViewButton() {
-//        let webScreen = WebViewScreenViewController()
-//        let navController = webScreen.wrapWithNavigationController()
-//        navController.modalPresentationStyle = .overCurrentContext
-//        view?.present(on: navController)
     }
     
     func viewDidLoad(_ view: FirstScreenViewController) {

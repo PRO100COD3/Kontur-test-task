@@ -8,14 +8,9 @@
 import UIKit
 import Kingfisher
 import SnapKit
-import ProgressHUD
 
 protocol FirstScreenView: AnyObject {
     func reloadData()
-    func present(on viewController: UIViewController)
-    func dismissScreen()
-    func showLoading()
-    func hideLoading()
 }
 
 final class FirstScreenViewController: UIViewController {
@@ -29,7 +24,6 @@ final class FirstScreenViewController: UIViewController {
         scrollView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         return scrollView
     }()
-    private lazy var activityIndicator = UIActivityIndicatorView()
     private lazy var pageControl: UIPageControl = {
         let pageControl = UIPageControl()
         pageControl.currentPage = 0
@@ -70,7 +64,6 @@ final class FirstScreenViewController: UIViewController {
     
     private func setupUI() {
         setupImageView()
-        setupActivityIndicator()
         setupScrollView()
         setupContentView()
         setupPageControl()
@@ -102,11 +95,7 @@ final class FirstScreenViewController: UIViewController {
             maker.leading.trailing.top.equalToSuperview()
         }
     }
-    
-    private func setupActivityIndicator() {
-        view.addSubview(activityIndicator)
-    }
-    
+        
     private func setupContentView() {
         let pageCount = presenter.rockets.count
         var previousPage: UIView? = nil
@@ -114,7 +103,6 @@ final class FirstScreenViewController: UIViewController {
         for index in 0..<pageCount {
             let pageView = UIView()
             scrollView.addSubview(pageView)
-            
             pageView.snp.makeConstraints { make in
                 make.top.bottom.equalTo(scrollView)
                 make.width.equalTo(scrollView)
@@ -381,31 +369,30 @@ final class FirstScreenViewController: UIViewController {
         secondStageTimeLabel.snp.makeConstraints { make in
             make.top.equalTo(secondStageFuelLabel.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(30)
-            make.bottom.equalToSuperview().offset(-30)
         }
         secondStageTimeLabelCount.snp.makeConstraints { make in
             make.top.equalTo(secondStageFuelLabel.snp.bottom).offset(20)
-            make.trailing.bottom.equalToSuperview().offset(-30)
+            make.trailing.equalToSuperview().offset(-30)
         }
-        let lastElement = secondStageTimeLabelCount
-        contentView.snp.makeConstraints { make in
-            make.bottom.equalTo(lastElement.snp.bottom).offset(20)
-        }
-    }
-    
-    @objc private func pageControlValueChanged(_ sender: UIPageControl) {
-        let page = sender.currentPage
-        let xOffset = scrollView.frame.width * CGFloat(page)
-        scrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: true)
-        updateDataForPage(page)
-    }
-}
+        
+        let button = UIButton(type: .system)
+        button.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)
+        button.setTitle("Посмотреть запуски", for: .normal)
+        button.tintColor = .white
+        button.addTarget(self, action: #selector (bottomButtonTapped), for: .touchUpInside)
+        button.titleLabel?.font = .systemFont(ofSize: 25)
 
-extension FirstScreenViewController: FirstScreenView {
-    func reloadData() {
-        pageControl.numberOfPages = presenter.rockets.count
-        setupContentView()
-        scrollViewDidEndDecelerating(scrollView)
+        
+        contentView.addSubview(button)
+        button.snp.makeConstraints { make in
+            make.top.equalTo(secondStageTimeLabelCount.snp.bottom).offset(20)
+            make.centerX.equalToSuperview()
+        }
+
+        let lastElement = button
+        contentView.snp.makeConstraints { make in
+            make.bottom.equalTo(lastElement.snp.bottom).offset(30)
+        }
     }
     
     private func updateDataForPage(_ page: Int) {
@@ -414,20 +401,27 @@ extension FirstScreenViewController: FirstScreenView {
         imageView.kf.setImage(with: URL(string: rocket.flickr_images?[0] ?? ""))
     }
     
-    func showLoading() {
-        activityIndicator.startAnimating()
+    @objc private func pageControlValueChanged(_ sender: UIPageControl) {
+        let page = sender.currentPage
+        let xOffset = scrollView.frame.width * CGFloat(page)
+        scrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: true)
+        updateDataForPage(page)
     }
     
-    func hideLoading() {
-        activityIndicator.stopAnimating()
+    @objc func bottomButtonTapped() {
+        let secondScreenPresenter = SecondScreenPresenterImpl(id: presenter.rockets[pageControl.currentPage].id ?? "")
+        let secondScreen = SecondScreenViewController(title: presenter.rockets[pageControl.currentPage].name ?? "", presenter: secondScreenPresenter)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "Назад", style: .plain, target: nil, action: nil)
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.pushViewController(secondScreen, animated: true)
     }
-    
-    func dismissScreen(){
-        dismiss(animated: true)
-    }
-    
-    func present(on viewController: UIViewController) {
-        self.present(viewController, animated: true)
+}
+
+extension FirstScreenViewController: FirstScreenView {
+    func reloadData() {
+        pageControl.numberOfPages = presenter.rockets.count
+        setupContentView()
+        scrollViewDidEndDecelerating(scrollView)
     }
 }
 

@@ -21,21 +21,21 @@ struct PaginatedResponse<T: Codable>: Codable {
     let nextPage: Int?
 }
 
-protocol SecondScreenPresenter: AnyObject {
-    func viewDidLoad(_ view: SecondScreenViewController)
+protocol LaunchesScreenPresenter: AnyObject {
+    func viewDidLoad(_ view: LaunchesScreenViewController)
     var launch: [Launch] { get }
 }
 
-enum SecondScreenPresenterState {
+enum LaunchesScreenPresenterState {
     case initial, loading, failed(Error), data([Launch])
 }
 
-final class SecondScreenPresenterImpl {
+final class LaunchesScreenPresenterImpl {
     private let provider = MoyaProvider<SpaceXAPI>()
     var launch: [Launch] = []
     private var currentRocker: String
-    private weak var view: SecondScreenView?
-    private var state = SecondScreenPresenterState.initial {
+    private weak var view: LaunchesScreenView?
+    private var state = LaunchesScreenPresenterState.initial {
         didSet {
             stateDidChanged()
         }
@@ -63,7 +63,7 @@ final class SecondScreenPresenterImpl {
             case .data(let launch):
                 self.launch = launch
                 let cellModels = launch.map { launch in
-                    SecondScreenCellModel(name: launch.name,
+                    LaunchesScreenCellModel(name: launch.name,
                                           date: formatDate(from: launch.date_local) ?? "",
                                           success: launch.success ?? false
                     )
@@ -110,8 +110,8 @@ final class SecondScreenPresenterImpl {
     }
 }
 
-extension SecondScreenPresenterImpl: SecondScreenPresenter {
-    func viewDidLoad(_ view: SecondScreenViewController) {
+extension LaunchesScreenPresenterImpl: LaunchesScreenPresenter {
+    func viewDidLoad(_ view: LaunchesScreenViewController) {
         self.state = .loading
         self.view = view
     }

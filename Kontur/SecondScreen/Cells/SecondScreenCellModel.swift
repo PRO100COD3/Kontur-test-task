@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SecondScreenCellModel {
+struct LaunchesScreenCellModel {
     let name: String
     let date: String
     let success: Bool

@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class SecondScreenTableViewCell: UITableViewCell {
+final class LaunchesScreenTableViewCell: UITableViewCell {
     
     static let defaultReuseIdentifier = "CustomTableCell"
     private let successImage = {
@@ -70,7 +70,7 @@ final class SecondScreenTableViewCell: UITableViewCell {
         }
     }
     
-    func changeCell(with cellModel: SecondScreenCellModel){
+    func changeCell(with cellModel: LaunchesScreenCellModel){
         nameLable.text = cellModel.name
         dateLabel.text = cellModel.date
         if cellModel.success {

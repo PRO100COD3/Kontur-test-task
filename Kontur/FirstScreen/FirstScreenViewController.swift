@@ -9,13 +9,13 @@ import UIKit
 import Kingfisher
 import SnapKit
 
-protocol FirstScreenView: AnyObject {
+protocol MainScreenView: AnyObject {
     func reloadData()
 }
 
-final class FirstScreenViewController: UIViewController {
+final class MainScreenViewController: UIViewController {
     
-    private let presenter: FirstScreenPresenter
+    private let presenter: MainScreenPresenter
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.backgroundColor = .backgroundBlack
@@ -46,7 +46,7 @@ final class FirstScreenViewController: UIViewController {
         return view
     }()
     
-    init(presenter: FirstScreenPresenter) {
+    init(presenter: MainScreenPresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -409,15 +409,15 @@ final class FirstScreenViewController: UIViewController {
     }
     
     @objc private func bottomButtonTapped() {
-        let secondScreenPresenter = SecondScreenPresenterImpl(id: presenter.rockets[pageControl.currentPage].id ?? "")
-        let secondScreen = SecondScreenViewController(title: presenter.rockets[pageControl.currentPage].name ?? "", presenter: secondScreenPresenter)
+        let secondScreenPresenter = LaunchesScreenPresenterImpl(id: presenter.rockets[pageControl.currentPage].id ?? "")
+        let secondScreen = LaunchesScreenViewController(title: presenter.rockets[pageControl.currentPage].name ?? "", presenter: secondScreenPresenter)
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "Назад", style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.tintColor = .white
         navigationController?.pushViewController(secondScreen, animated: true)
     }
 }
 
-extension FirstScreenViewController: FirstScreenView {
+extension MainScreenViewController: MainScreenView {
     func reloadData() {
         pageControl.numberOfPages = presenter.rockets.count
         setupContentView()
@@ -425,7 +425,7 @@ extension FirstScreenViewController: FirstScreenView {
     }
 }
 
-extension FirstScreenViewController: UIScrollViewDelegate {
+extension MainScreenViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let page = Int(scrollView.contentOffset.x / scrollView.frame.width)
         pageControl.currentPage = page

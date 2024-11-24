@@ -8,9 +8,9 @@
 import Moya
 import UIKit
 
-protocol FirstScreenPresenter: AnyObject {
-    func viewDidLoad(_ view: FirstScreenViewController)
-    func setView(_ view: FirstScreenViewController)
+protocol MainScreenPresenter: AnyObject {
+    func viewDidLoad(_ view: MainScreenViewController)
+    func setView(_ view: MainScreenViewController)
     func formateDate(input: String) -> String
     func formateCountry(input: String) -> String
     func formatToMillions(number: Int) -> String
@@ -19,15 +19,15 @@ protocol FirstScreenPresenter: AnyObject {
     var rockets: [Rocket] { get }
 }
 
-enum FirstScreenPresenterState {
+enum MainScreenPresenterState {
     case initial, loading, failed(Error), data([Rocket])
 }
 
-final class FirstScreenPresenterImpl {
+final class MainScreenPresenterImpl {
     private let provider = MoyaProvider<SpaceXAPI>()
     var rockets: [Rocket] = []
-    weak var view: FirstScreenView?
-    private var state = FirstScreenPresenterState.initial {
+    weak var view: MainScreenView?
+    private var state = MainScreenPresenterState.initial {
         didSet {
             stateDidChanged()
         }
@@ -65,7 +65,7 @@ final class FirstScreenPresenterImpl {
     }
 }
 
-extension FirstScreenPresenterImpl: FirstScreenPresenter {
+extension MainScreenPresenterImpl: MainScreenPresenter {
     func formatTime(number: Int) -> String {
         return String("\(number) sec")
     }
@@ -109,11 +109,11 @@ extension FirstScreenPresenterImpl: FirstScreenPresenter {
         return formattedDate
     }
         
-    func setView(_ view: FirstScreenViewController) {
+    func setView(_ view: MainScreenViewController) {
         self.view = view
     }
     
-    func viewDidLoad(_ view: FirstScreenViewController) {
+    func viewDidLoad(_ view: MainScreenViewController) {
         self.state = .loading
         self.view = view
     }

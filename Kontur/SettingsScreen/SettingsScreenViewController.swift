@@ -5,4 +5,8 @@
 //  Created by Вадим Дзюба on 25.11.2024.
 //
 
-import Foundation
+import UIKit
+
+final class SettingsScreenViewController: UIViewController {
+    
+}

@@ -10,7 +10,6 @@ import UIKit
 
 protocol MainScreenPresenter: AnyObject {
     func viewDidLoad(_ view: MainScreenViewController)
-    func setView(_ view: MainScreenViewController)
     func formateDate(input: String) -> String
     func formateCountry(input: String) -> String
     func formatToMillions(number: Int) -> String
@@ -107,10 +106,6 @@ extension MainScreenPresenterImpl: MainScreenPresenter {
         outputFormatter.dateFormat = "d MMMM yyyy" 
         let formattedDate = outputFormatter.string(from: date)
         return formattedDate
-    }
-        
-    func setView(_ view: MainScreenViewController) {
-        self.view = view
     }
     
     func viewDidLoad(_ view: MainScreenViewController) {

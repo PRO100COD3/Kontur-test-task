@@ -36,14 +36,14 @@ final class MainScreenViewController: UIViewController {
         let image = UIImageView()
         return image
     }()
-    private lazy var bottomView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .backgroundBlack
-        view.layer.masksToBounds = true
-        view.layer.cornerRadius = 15
-        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        return view
-    }()
+//    private lazy var bottomView: UIView = {
+//        let view = UIView()
+//        view.backgroundColor = .backgroundBlack
+//        view.layer.masksToBounds = true
+//        view.layer.cornerRadius = 15
+//        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+//        return view
+//    }()
     
     init(presenter: MainScreenPresenter) {
         self.presenter = presenter
@@ -90,8 +90,8 @@ final class MainScreenViewController: UIViewController {
     
     private func setupImageView() {
         view.addSubview(imageView)
-        imageView.snp.makeConstraints { maker in
-            maker.leading.trailing.top.equalToSuperview()
+        imageView.snp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
         }
     }
     

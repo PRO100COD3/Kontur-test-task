@@ -9,17 +9,6 @@ import UIKit
 import Kingfisher
 import SnapKit
 
-//struct Section {
-//    let title: String
-//    let buttonAction: (() -> Void)?
-//    let rows: [Row]
-//}
-//
-//struct Row {
-//    let leftText: String
-//    let rightText: String
-//}
-
 protocol newMainScreenView: AnyObject {
     func reloadData()
 }
@@ -29,46 +18,15 @@ final class newMainScreenViewController: UIViewController {
     private let presenter: MainScreenPresenter
     private lazy var pageViewControl: UIPageViewController = {
         let pageVC = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+        pageVC.dataSource = self
+        pageVC.delegate = self
         return pageVC
     }()
-//    private lazy var tableView: UITableView = {
-//        let tableView = UITableView()
-//        tableView.frame = self.view.bounds
-//        tableView.dataSource = self
-//        tableView.delegate = self
-//        tableView.register(LaunchesScreenTableViewCell.self, forCellReuseIdentifier: LaunchesScreenTableViewCell.defaultReuseIdentifier)
-//        tableView.separatorStyle = .none
-//        tableView.backgroundColor = .black
-//        return tableView
-//    }()
     private lazy var imageView: UIImageView = {
         let image = UIImageView()
+        image.image = UIImage(named: "dodge")
         return image
     }()
-    private lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .boldSystemFont(ofSize: 25)
-        label.textColor = .white
-        return label
-    }()
-    private lazy var settingsButton: UIButton = {
-        let button = UIButton()
-        let image = UIImage(systemName: "gearshape")
-        button.setImage(image, for: .normal)
-        button.tintColor = .white
-        button.addTarget(self, action: #selector (settingsButtonTapped), for: .touchUpInside)
-        button.titleLabel?.font = .systemFont(ofSize: 25)
-        return button
-    }()
-    private lazy var bottomView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .backgroundBlack
-        view.layer.masksToBounds = true
-        view.layer.cornerRadius = 15
-        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        return view
-    }()
     private lazy var bottomView: UIView = {
         let view = UIView()
         view.backgroundColor = .backgroundBlack
@@ -77,28 +35,27 @@ final class newMainScreenViewController: UIViewController {
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         return view
     }()
-
-    
-//    private var sections = [
-//        Section(
-//            title: "Falcon 1",
-//            buttonAction: { print("Настройки Falcon 1") },
-//            rows: [
-//                Row(leftText: "Первый запуск", rightText: "24 марта 2006"),
-//                Row(leftText: "Страна", rightText: "Республика Маршалловы острова"),
-//                Row(leftText: "Стоимость запуска", rightText: "$7 млн")
-//            ]
-//        ),
-//        Section(
-//            title: "первая ступень",
-//            buttonAction: nil,
-//            rows: [
-//                Row(leftText: "Количество двигателей", rightText: "1"),
-//                Row(leftText: "Количество топлива", rightText: "44,3 ton"),
-//                Row(leftText: "Время сгорания", rightText: "169 sec")
-//            ]
-//        )
-//    ]
+    private lazy var pageControl: UIPageControl = {
+        let control = UIPageControl()
+        control.numberOfPages = pageControllers.count
+        control.currentPage = 0
+        control.pageIndicatorTintColor = .lightGray
+        control.currentPageIndicatorTintColor = .white
+        return control
+    }()
+    private lazy var pageControllers: [UIViewController] = {
+        let blueVC = UIViewController()
+        blueVC.view.backgroundColor = .blue
+        
+        let redVC = UIViewController()
+        redVC.view.backgroundColor = .red
+        
+        let greenVC = UIViewController()
+        greenVC.view.backgroundColor = .green
+        
+        return [blueVC, redVC, greenVC]
+    }()
+    private var currentPageIndex = 0
     
     init(presenter: MainScreenPresenter) {
         self.presenter = presenter
@@ -119,61 +76,74 @@ final class newMainScreenViewController: UIViewController {
     private func setupUI() {
         setupImage()
         setupBottomView()
-        setupLabel()
-        setupButton()
         setupPageControl()
+        setupPageIndicator()
     }
     
     private func setupImage(){
         view.addSubview(imageView)
-        imageView.snp.makeConstraints { maker in
-            maker.leading.trailing.top.equalToSuperview()
+        imageView.snp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            make.height.equalTo(400)
         }
     }
     
     private func setupBottomView(){
-        
-    }
-    
-    private func setupLabel(){
-        
-    }
-    
-    private func setupButton(){
-        
+        view.addSubview(bottomView)
+        bottomView.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(350)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-30)
+        }
     }
     
     private func setupPageControl(){
+        addChild(pageViewControl)
+        bottomView.addSubview(pageViewControl.view)
+        pageViewControl.view.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        pageViewControl.didMove(toParent: self)
         
+        if let firstVC = pageControllers.first {
+            pageViewControl.setViewControllers([firstVC], direction: .forward, animated: true, completion: nil)
+        }
     }
     
-    @objc private func settingsButtonTapped() {
-        let viewController = SettingsScreenViewController()
-        
-        viewController.title = "Настройки"
-        viewController.navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: "Закрыть",
-            style: .done,
-            target: self,
-            action: #selector(doneTapped)
-        )
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .black
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-        appearance.buttonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.white]
-        appearance.doneButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.white]
-
-        let navigationController = UINavigationController(rootViewController: viewController)
-        navigationController.navigationBar.standardAppearance = appearance
-        navigationController.navigationBar.scrollEdgeAppearance = appearance
-        navigationController.modalPresentationStyle = .pageSheet
-        present(navigationController, animated: true, completion: nil)
+    private func setupPageIndicator() {
+        view.addSubview(pageControl)
+        pageControl.snp.makeConstraints { make in
+            make.top.equalTo(bottomView.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(view.snp.bottom)
+        }
     }
+}
 
-    @objc private func doneTapped() {
-        dismiss(animated: true, completion: nil)
+extension newMainScreenViewController: UIPageViewControllerDataSource {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        guard let currentIndex = pageControllers.firstIndex(of: viewController), currentIndex > 0 else {
+            return nil
+        }
+        return pageControllers[currentIndex - 1]
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        guard let currentIndex = pageControllers.firstIndex(of: viewController), currentIndex < pageControllers.count - 1 else {
+            return nil
+        }
+        return pageControllers[currentIndex + 1]
+    }
+}
+
+extension newMainScreenViewController: UIPageViewControllerDelegate {
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        guard completed, let visibleController = pageViewController.viewControllers?.first,
+              let index = pageControllers.firstIndex(of: visibleController) else {
+            return
+        }
+        currentPageIndex = index
+        pageControl.currentPage = index
     }
 }
 
@@ -184,3 +154,36 @@ extension newMainScreenViewController: MainScreenView {
         //        scrollViewDidEndDecelerating(scrollView)
     }
 }
+
+
+//struct Section {
+//    let title: String
+//    let buttonAction: (() -> Void)?
+//    let rows: [Row]
+//}
+//
+//struct Row {
+//    let leftText: String
+//    let rightText: String
+//}
+
+//    private var sections = [
+//        Section(
+//            title: "Falcon 1",
+//            buttonAction: { print("Настройки Falcon 1") },
+//            rows: [
+//                Row(leftText: "Первый запуск", rightText: "24 марта 2006"),
+//                Row(leftText: "Страна", rightText: "Республика Маршалловы острова"),
+//                Row(leftText: "Стоимость запуска", rightText: "$7 млн")
+//            ]
+//        ),
+//        Section(
+//            title: "первая ступень",
+//            buttonAction: nil,
+//            rows: [
+//                Row(leftText: "Количество двигателей", rightText: "1"),
+//                Row(leftText: "Количество топлива", rightText: "44,3 ton"),
+//                Row(leftText: "Время сгорания", rightText: "169 sec")
+//            ]
+//        )
+//    ]

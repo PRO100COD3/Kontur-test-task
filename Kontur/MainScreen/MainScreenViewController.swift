@@ -38,7 +38,6 @@ final class MainScreenViewController: UIViewController {
     }()
     private lazy var bottomView: UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .backgroundBlack
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 15
@@ -154,11 +153,25 @@ final class MainScreenViewController: UIViewController {
         titleLabel.text = rocket.name
         
         contentView.addSubview(titleLabel)
-        titleLabel.text = rocket.name
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(contentView.snp.top).offset(50)
             make.leading.equalTo(contentView.snp.leading).offset(30)
-            make.trailing.equalTo(contentView.snp.trailing).offset(-30)
+//            make.trailing.equalTo(contentView.snp.trailing).offset(-30)
+        }
+        
+        let settingsButton = UIButton(type: .system)
+        settingsButton.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)
+        let image = UIImage(systemName: "gearshape")
+        settingsButton.setImage(image, for: .normal)
+        settingsButton.tintColor = .white
+        settingsButton.addTarget(self, action: #selector (settingsButtonTapped), for: .touchUpInside)
+        settingsButton.titleLabel?.font = .systemFont(ofSize: 25)
+        
+        
+        contentView.addSubview(settingsButton)
+        settingsButton.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.top)
+            make.trailing.equalToSuperview().offset(-30)
         }
         
         let firstStartLabel = UILabel()
@@ -414,6 +427,35 @@ final class MainScreenViewController: UIViewController {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "Назад", style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.tintColor = .white
         navigationController?.pushViewController(secondScreen, animated: true)
+    }
+    
+    @objc private func settingsButtonTapped() {
+        let viewController = SettingsScreenViewController()
+        
+        viewController.title = "Настройки"
+        viewController.navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Закрыть",
+            style: .done,
+            target: self,
+            action: #selector(doneTapped)
+        )
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .black
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.buttonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.doneButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.white]
+
+        let navigationController = UINavigationController(rootViewController: viewController)
+        navigationController.navigationBar.standardAppearance = appearance
+        navigationController.navigationBar.scrollEdgeAppearance = appearance
+        navigationController.modalPresentationStyle = .pageSheet
+        present(navigationController, animated: true, completion: nil)
+    }
+
+    @objc private func doneTapped() {
+        dismiss(animated: true, completion: nil)
     }
 }
 

@@ -24,6 +24,10 @@ enum MainScreenPresenterState {
 
 final class MainScreenPresenterImpl {
     private let provider = MoyaProvider<SpaceXAPI>()
+    private let heightValue = false
+    private let diametrValue = false
+    private let massValue = false
+    private let loadValue = false
     var rockets: [Rocket] = []
     weak var view: MainScreenView?
     private var state = MainScreenPresenterState.initial {

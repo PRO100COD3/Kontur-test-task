@@ -5,7 +5,9 @@
 //  Created by Вадим Дзюба on 16.11.2024.
 //
 
-struct Rocket: Decodable {
+import Foundation
+
+struct RocketDTO: Decodable {
     struct Height: Decodable {
         let meters: Double?
         let feet: Double?
@@ -116,4 +118,35 @@ struct Rocket: Decodable {
     let wikipedia: String?
     let description: String?
     let id: String?
+}
+
+struct RocketTable {
+    let id: String
+    let image: String
+    let name: String
+    let firstFlight: String
+    let country: String
+    let costPerLaunch: String
+    let firstStageEngines: String
+    let firstStageFuel: NSAttributedString
+    let firstStageBurnTimeSec: String
+    let secondStageEngines: String
+    let secondStageFuel: NSAttributedString
+    let secondStageBurnTimeSec: String
+}
+
+struct RocketCollection {
+    let heightMeters: String
+    let heightFoots: String
+    let diametrMeters: String
+    let dianetrFoots: String
+    let massKG: String
+    let massLB: String
+    let payloadKG: String
+    let payloadLB: String
+
+    let heightMetric: String
+    let dianetrMetric: String
+    let massMetric: String
+    let payloadMetric: String
 }

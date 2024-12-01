@@ -14,23 +14,16 @@ final class RocketHeaderView: UITableViewHeaderFooterView {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.font = .systemFont(ofSize: 23, weight: .semibold)
         label.textColor = .white
         return label
-    }()
-    
-    private let actionButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "gear"), for: .normal)
-        button.tintColor = .white
-        return button
     }()
     
     private var buttonAction: (() -> Void)?
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = .darkGray
+        contentView.backgroundColor = .black
         setupLayout()
     }
     
@@ -40,30 +33,15 @@ final class RocketHeaderView: UITableViewHeaderFooterView {
     
     private func setupLayout() {
         contentView.addSubview(titleLabel)
-        contentView.addSubview(actionButton)
-                        
+        
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(contentView.snp.leading).offset(16)
-            make.top.equalTo(contentView.snp.top).offset(10)
+            make.leading.equalTo(contentView.snp.leading).offset(30)
+            make.top.equalTo(contentView.snp.top)
         }
-        
-        actionButton.snp.makeConstraints { make in
-            make.trailing.equalTo(contentView.snp.trailing).offset(-16)
-            make.top.equalTo(contentView.snp.top).offset(10)
-
-        }
-        
-        actionButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
     
-    func configure(title: String, buttonAction: (() -> Void)?) {
+    func configure(title: String) {
         titleLabel.text = title
-        self.buttonAction = buttonAction
-        actionButton.isHidden = buttonAction == nil
-    }
-    
-    @objc private func buttonTapped() {
-        buttonAction?()
     }
 }
 

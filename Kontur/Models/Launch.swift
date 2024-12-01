@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Launch: Codable {
+struct LaunchDTO: Codable {
     let fairings: Fairings?
     let links: Links
     let staticFireDateUTC: String?

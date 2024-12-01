@@ -9,11 +9,11 @@ import UIKit
 import Kingfisher
 import SnapKit
 
-protocol newMainScreenView: AnyObject {
+protocol MainScreenView: AnyObject {
     func reloadData()
 }
 
-final class newMainScreenViewController: UIViewController {
+final class MainScreenViewController: UIViewController {
     
     private let presenter: MainScreenPresenter
     private lazy var pageViewControl: UIPageViewController = {
@@ -24,7 +24,6 @@ final class newMainScreenViewController: UIViewController {
     }()
     private lazy var imageView: UIImageView = {
         let image = UIImageView()
-        image.image = UIImage(named: "dodge")
         return image
     }()
     private lazy var bottomView: UIView = {
@@ -38,23 +37,11 @@ final class newMainScreenViewController: UIViewController {
     private lazy var pageControl: UIPageControl = {
         let control = UIPageControl()
         control.numberOfPages = pageControllers.count
-        control.currentPage = 0
         control.pageIndicatorTintColor = .lightGray
         control.currentPageIndicatorTintColor = .white
         return control
     }()
-    private lazy var pageControllers: [UIViewController] = {
-        let blueVC = UIViewController()
-        blueVC.view.backgroundColor = .blue
-        
-        let redVC = UIViewController()
-        redVC.view.backgroundColor = .red
-        
-        let greenVC = UIViewController()
-        greenVC.view.backgroundColor = .green
-        
-        return [blueVC, redVC, greenVC]
-    }()
+    private lazy var pageControllers: [UIViewController] = []
     private var currentPageIndex = 0
     
     init(presenter: MainScreenPresenter) {
@@ -69,11 +56,11 @@ final class newMainScreenViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundBlack
-        //        presenter.viewDidLoad(self)
-        setupUI()
+        presenter.viewDidLoad(self)
     }
     
     private func setupUI() {
+        pageControl.currentPage = currentPageIndex
         setupImage()
         setupBottomView()
         setupPageControl()
@@ -82,6 +69,7 @@ final class newMainScreenViewController: UIViewController {
     
     private func setupImage(){
         view.addSubview(imageView)
+        imageView.kf.setImage(with: URL(string: presenter.rawRockets[pageControl.currentPage].flickr_images?[0] ?? ""))
         imageView.snp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
             make.height.equalTo(400)
@@ -91,7 +79,7 @@ final class newMainScreenViewController: UIViewController {
     private func setupBottomView(){
         view.addSubview(bottomView)
         bottomView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(350)
+            make.top.equalToSuperview().inset(300)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-30)
         }
@@ -118,9 +106,13 @@ final class newMainScreenViewController: UIViewController {
             make.bottom.equalTo(view.snp.bottom)
         }
     }
+    
+    private func reloadImages() {
+        imageView.kf.setImage(with: URL(string: presenter.rawRockets[pageControl.currentPage].flickr_images?[0] ?? ""))
+    }
 }
 
-extension newMainScreenViewController: UIPageViewControllerDataSource {
+extension MainScreenViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         guard let currentIndex = pageControllers.firstIndex(of: viewController), currentIndex > 0 else {
             return nil
@@ -136,54 +128,21 @@ extension newMainScreenViewController: UIPageViewControllerDataSource {
     }
 }
 
-extension newMainScreenViewController: UIPageViewControllerDelegate {
+extension MainScreenViewController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         guard completed, let visibleController = pageViewController.viewControllers?.first,
               let index = pageControllers.firstIndex(of: visibleController) else {
             return
         }
         currentPageIndex = index
-        pageControl.currentPage = index
+        pageControl.currentPage = currentPageIndex
+        reloadImages()
     }
 }
 
-extension newMainScreenViewController: MainScreenView {
+extension MainScreenViewController: MainScreenView {
     func reloadData() {
-        //        pageControl.numberOfPages = presenter.rockets.count
-        //        setupContentView()
-        //        scrollViewDidEndDecelerating(scrollView)
+        pageControllers = presenter.screens
+        setupUI()
     }
 }
-
-
-//struct Section {
-//    let title: String
-//    let buttonAction: (() -> Void)?
-//    let rows: [Row]
-//}
-//
-//struct Row {
-//    let leftText: String
-//    let rightText: String
-//}
-
-//    private var sections = [
-//        Section(
-//            title: "Falcon 1",
-//            buttonAction: { print("Настройки Falcon 1") },
-//            rows: [
-//                Row(leftText: "Первый запуск", rightText: "24 марта 2006"),
-//                Row(leftText: "Страна", rightText: "Республика Маршалловы острова"),
-//                Row(leftText: "Стоимость запуска", rightText: "$7 млн")
-//            ]
-//        ),
-//        Section(
-//            title: "первая ступень",
-//            buttonAction: nil,
-//            rows: [
-//                Row(leftText: "Количество двигателей", rightText: "1"),
-//                Row(leftText: "Количество топлива", rightText: "44,3 ton"),
-//                Row(leftText: "Время сгорания", rightText: "169 sec")
-//            ]
-//        )
-//    ]

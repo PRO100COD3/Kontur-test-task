@@ -23,16 +23,16 @@ struct PaginatedResponse<T: Codable>: Codable {
 
 protocol LaunchesScreenPresenter: AnyObject {
     func viewDidLoad(_ view: LaunchesScreenViewController)
-    var launch: [Launch] { get }
+    var launch: [LaunchDTO] { get }
 }
 
 enum LaunchesScreenPresenterState {
-    case initial, loading, failed(Error), data([Launch])
+    case initial, loading, failed(Error), data([LaunchDTO])
 }
 
 final class LaunchesScreenPresenterImpl {
     private let provider = MoyaProvider<SpaceXAPI>()
-    var launch: [Launch] = []
+    var launch: [LaunchDTO] = []
     private var currentRocker: String
     private weak var view: LaunchesScreenView?
     private var state = LaunchesScreenPresenterState.initial {
@@ -91,12 +91,12 @@ final class LaunchesScreenPresenterImpl {
     }
     
     
-    private func fetchLaunchesByRocketID(_ rocketID: String, completion: @escaping (Result<[Launch], Error>) -> Void) {
+    private func fetchLaunchesByRocketID(_ rocketID: String, completion: @escaping (Result<[LaunchDTO], Error>) -> Void) {
         provider.request(.launchesByRocket(id: rocketID)) { result in
             switch result {
                 case .success(let response):
                     do {
-                        let responseJSON = try JSONDecoder().decode(PaginatedResponse<Launch>.self, from: response.data)
+                        let responseJSON = try JSONDecoder().decode(PaginatedResponse<LaunchDTO>.self, from: response.data)
                         completion(.success(responseJSON.docs))
                     } catch {
                         print("Ошибка декодирования: \(error)")

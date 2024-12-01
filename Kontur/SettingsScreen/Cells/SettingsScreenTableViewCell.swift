@@ -25,7 +25,7 @@ final class SettingsScreenTableViewCell: UITableViewCell {
         selectionStyle = .none
         setupUI()
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -65,9 +65,14 @@ final class SettingsScreenTableViewCell: UITableViewCell {
         }
     }
     
-    func configure(title: String, firstItem: String, secondItem: String) {
+    func configure(title: String, firstItem: String, secondItem: String, selectIndex: Bool) {
         customSwitch.setTitle(firstItem, forSegmentAt: 0)
         customSwitch.setTitle(secondItem, forSegmentAt: 1)
+        if !selectIndex {
+            customSwitch.selectedSegmentIndex = 0
+        } else {
+            customSwitch.selectedSegmentIndex = 1
+        }
         titleLabel.text = title
     }
     

@@ -6,22 +6,23 @@
 //
 
 import UIKit
+import SnapKit
 
 final class RocketTableViewCell: UITableViewCell {
     
     static let identifier = "RocketTableViewCell"
     
-    private let leftLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .white
-        return label
-    }()
-    
-    private let rightLabel: UILabel = {
+    private lazy var leftLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = .lightGray
+        return label
+    }()
+    
+    private lazy var rightLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = .white
         label.textAlignment = .right
         return label
     }()
@@ -40,23 +41,24 @@ final class RocketTableViewCell: UITableViewCell {
         contentView.addSubview(leftLabel)
         contentView.addSubview(rightLabel)
         
-        leftLabel.translatesAutoresizingMaskIntoConstraints = false
-        rightLabel.translatesAutoresizingMaskIntoConstraints = false
+        leftLabel.snp.makeConstraints { make in
+            make.leading.equalTo(contentView.snp.leading).offset(10)
+            make.centerY.equalTo(contentView.snp.centerY)
+        }
         
-        NSLayoutConstraint.activate([
-            leftLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            leftLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            
-            rightLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            rightLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            
-            rightLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leftLabel.trailingAnchor, constant: 8)
-        ])
+        rightLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(contentView.snp.trailing).offset(-10)
+            make.centerY.equalTo(contentView.snp.centerY)
+        }
     }
     
     func configure(leftText: String, rightText: String) {
         leftLabel.text = leftText
         rightLabel.text = rightText
+    }
+    func configure(leftText: String, rightText: NSAttributedString) {
+        leftLabel.text = leftText
+        rightLabel.attributedText = rightText
     }
 }
 

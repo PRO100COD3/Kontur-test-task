@@ -8,8 +8,11 @@
 import UIKit
 import SnapKit
 
-final class SettingsScreenViewController: UIViewController {
+protocol SwitchCellDelegate: AnyObject {
+    func switchCell(numOfSelection: Int)
+}
 
+final class SettingsScreenViewController: UIViewController {
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.frame = self.view.bounds
@@ -20,20 +23,30 @@ final class SettingsScreenViewController: UIViewController {
         tableView.backgroundColor = .black
         return tableView
     }()
-
+    private var switchBools: [Bool]
+    weak var switchDelegate: SwitchCellDelegate?
     private let data = [
         ["Высота", "m", "ft"],
         ["Диаметр", "m", "ft"],
         ["Масса", "kg", "lb"],
         ["Полезная нагрузка", "kg", "lb"]
     ]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        //        presenter.viewDidLoad(self)
         view.backgroundColor = .black
         setupTableView()
     }
     
+    init(switchDelegate: SwitchCellDelegate, bools: [Bool]) {
+        self.switchDelegate = switchDelegate
+        self.switchBools = bools
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private func setupTableView() {
         view.addSubview(tableView)
@@ -56,7 +69,7 @@ extension SettingsScreenViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         cell.delegate = self
-        cell.configure(title: data[indexPath.row][0], firstItem: data[indexPath.row][1], secondItem: data[indexPath.row][2])
+        cell.configure(title: data[indexPath.row][0], firstItem: data[indexPath.row][1], secondItem: data[indexPath.row][2], selectIndex: switchBools[indexPath.row])
         return cell
     }
 }
@@ -69,15 +82,7 @@ extension SettingsScreenViewController: UITableViewDelegate {
 
 extension SettingsScreenViewController: SettingsScreenTableViewCellDelegate {
     func switchValueChanged(forCell cell: SettingsScreenTableViewCell, selectedIndex: Int) {
-        let indexPath = tableView.indexPath(for: cell)
-        if indexPath?.row == 0 {
-            
-        } else if indexPath?.row == 1 {
-            
-        } else if indexPath?.row == 2 {
-            
-        } else if indexPath?.row == 3 {
-            
-        }
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        switchDelegate?.switchCell(numOfSelection: indexPath.row)
     }
 }

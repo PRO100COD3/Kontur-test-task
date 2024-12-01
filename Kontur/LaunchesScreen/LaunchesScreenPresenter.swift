@@ -21,21 +21,21 @@ struct PaginatedResponse<T: Codable>: Codable {
     let nextPage: Int?
 }
 
-protocol SecondScreenPresenter: AnyObject {
-    func viewDidLoad(_ view: SecondScreenViewController)
-    var launch: [Launch] { get }
+protocol LaunchesScreenPresenter: AnyObject {
+    func viewDidLoad(_ view: LaunchesScreenViewController)
+    var launch: [LaunchDTO] { get }
 }
 
-enum SecondScreenPresenterState {
-    case initial, loading, failed(Error), data([Launch])
+enum LaunchesScreenPresenterState {
+    case initial, loading, failed(Error), data([LaunchDTO])
 }
 
-final class SecondScreenPresenterImpl {
+final class LaunchesScreenPresenterImpl {
     private let provider = MoyaProvider<SpaceXAPI>()
-    var launch: [Launch] = []
+    var launch: [LaunchDTO] = []
     private var currentRocker: String
-    private weak var view: SecondScreenView?
-    private var state = SecondScreenPresenterState.initial {
+    private weak var view: LaunchesScreenView?
+    private var state = LaunchesScreenPresenterState.initial {
         didSet {
             stateDidChanged()
         }
@@ -63,7 +63,7 @@ final class SecondScreenPresenterImpl {
             case .data(let launch):
                 self.launch = launch
                 let cellModels = launch.map { launch in
-                    SecondScreenCellModel(name: launch.name,
+                    LaunchesScreenCellModel(name: launch.name,
                                           date: formatDate(from: launch.date_local) ?? "",
                                           success: launch.success ?? false
                     )
@@ -91,12 +91,12 @@ final class SecondScreenPresenterImpl {
     }
     
     
-    private func fetchLaunchesByRocketID(_ rocketID: String, completion: @escaping (Result<[Launch], Error>) -> Void) {
+    private func fetchLaunchesByRocketID(_ rocketID: String, completion: @escaping (Result<[LaunchDTO], Error>) -> Void) {
         provider.request(.launchesByRocket(id: rocketID)) { result in
             switch result {
                 case .success(let response):
                     do {
-                        let responseJSON = try JSONDecoder().decode(PaginatedResponse<Launch>.self, from: response.data)
+                        let responseJSON = try JSONDecoder().decode(PaginatedResponse<LaunchDTO>.self, from: response.data)
                         completion(.success(responseJSON.docs))
                     } catch {
                         print("Ошибка декодирования: \(error)")
@@ -110,8 +110,8 @@ final class SecondScreenPresenterImpl {
     }
 }
 
-extension SecondScreenPresenterImpl: SecondScreenPresenter {
-    func viewDidLoad(_ view: SecondScreenViewController) {
+extension LaunchesScreenPresenterImpl: LaunchesScreenPresenter {
+    func viewDidLoad(_ view: LaunchesScreenViewController) {
         self.state = .loading
         self.view = view
     }

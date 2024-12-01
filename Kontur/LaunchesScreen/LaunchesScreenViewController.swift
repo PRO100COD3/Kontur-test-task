@@ -8,13 +8,13 @@
 import UIKit
 import SnapKit
 
-protocol SecondScreenView: AnyObject {
-    func displayCells(_ cellModels: [SecondScreenCellModel])
+protocol LaunchesScreenView: AnyObject {
+    func displayCells(_ cellModels: [LaunchesScreenCellModel])
 }
 
-final class SecondScreenViewController: UIViewController {
-    private let presenter: SecondScreenPresenter
-    private var cellModels: [SecondScreenCellModel] = []
+final class LaunchesScreenViewController: UIViewController {
+    private let presenter: LaunchesScreenPresenter
+    private var cellModels: [LaunchesScreenCellModel] = []
     private lazy var emptyLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
@@ -28,7 +28,7 @@ final class SecondScreenViewController: UIViewController {
         tableView.frame = self.view.bounds
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(SecondScreenTableViewCell.self, forCellReuseIdentifier: SecondScreenTableViewCell.defaultReuseIdentifier)
+        tableView.register(LaunchesScreenTableViewCell.self, forCellReuseIdentifier: LaunchesScreenTableViewCell.defaultReuseIdentifier)
         tableView.separatorStyle = .none
         tableView.backgroundColor = .black
         return tableView
@@ -47,7 +47,7 @@ final class SecondScreenViewController: UIViewController {
         setupUI()
     }
     
-    init(title: String, presenter: SecondScreenPresenter) {
+    init(title: String, presenter: LaunchesScreenPresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
         self.title = title
@@ -77,7 +77,7 @@ final class SecondScreenViewController: UIViewController {
     }
 }
 
-extension SecondScreenViewController: UITableViewDelegate {
+extension LaunchesScreenViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row % 2 == 0 {
             return 100
@@ -98,15 +98,14 @@ extension SecondScreenViewController: UITableViewDelegate {
     }
 }
 
-extension SecondScreenViewController: UITableViewDataSource {
+extension LaunchesScreenViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         cellModels.count * 2 - 1
-        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row % 2 == 0 {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: SecondScreenTableViewCell.defaultReuseIdentifier, for: indexPath) as? SecondScreenTableViewCell else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: LaunchesScreenTableViewCell.defaultReuseIdentifier, for: indexPath) as? LaunchesScreenTableViewCell else {
                 return UITableViewCell()
             }
             let cellModel = cellModels[indexPath.row / 2]
@@ -123,8 +122,8 @@ extension SecondScreenViewController: UITableViewDataSource {
     }
 }
 
-extension SecondScreenViewController: SecondScreenView {
-    func displayCells(_ cellModels: [SecondScreenCellModel]) {
+extension LaunchesScreenViewController: LaunchesScreenView {
+    func displayCells(_ cellModels: [LaunchesScreenCellModel]) {
         if cellModels.count == 0 {
             emptyLabel.isHidden = false
         } else {

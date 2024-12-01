@@ -11,12 +11,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     
-    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        let firstScreenPresenter = FirstScreenPresenterImpl()
-        let rootViewController = FirstScreenViewController(presenter: firstScreenPresenter)
+        let firstScreenPresenter = MainScreenPresenterImpl()
+        let rootViewController = MainScreenViewController(presenter: firstScreenPresenter)
         let navController = UINavigationController(rootViewController: rootViewController)
         window?.rootViewController = navController
         window?.makeKeyAndVisible()

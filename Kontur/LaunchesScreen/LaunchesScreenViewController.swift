@@ -33,7 +33,7 @@ final class LaunchesScreenViewController: UIViewController {
         tableView.backgroundColor = .black
         return tableView
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad(self)

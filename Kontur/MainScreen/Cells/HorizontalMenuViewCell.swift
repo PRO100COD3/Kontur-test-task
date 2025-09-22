@@ -59,5 +59,4 @@ final class HorizontalMenuViewCell: UICollectionViewCell {
         titleLabel.text = title
         subtitleLabel.text = subtitle
     }
-    
 }

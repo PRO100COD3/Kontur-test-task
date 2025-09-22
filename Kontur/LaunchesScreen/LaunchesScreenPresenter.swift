@@ -8,7 +8,7 @@
 import Moya
 import UIKit
 
-struct PaginatedResponse<T: Codable>: Codable {
+struct PaginatedResponse<T: Decodable>: Decodable {
     let docs: [T]
     let totalDocs: Int
     let limit: Int
